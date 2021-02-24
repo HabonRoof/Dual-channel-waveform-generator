@@ -1,0 +1,2 @@
+调试前，先将RSCG12864B(函数库）拷贝到安装目录下。如“C:\Program Files\Arduino\libraries”，这样IDE添加库选项里就有了“RSCG12864B”
+Before commissioning, first copy RSCG12864B (function library) to the installation directory. Such as "C: \ Program Files \ Arduino \ libraries", so IDE add library option there is "RSCG12864B"

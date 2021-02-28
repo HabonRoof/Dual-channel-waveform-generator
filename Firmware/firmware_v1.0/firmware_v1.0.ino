@@ -6,6 +6,13 @@
   Author: Chun-Lin Chen (HabonRoof)
   License: CC-BY 3.0
 
+  Update: 2021/02/28
+  Feature:Add channel status page at main menu
+  Fix the accurate of frequency issue
+  Add channel indicator on each setting screen to ensure user know which channel is he setting
+  Issue:
+  Phase function not avaliable
+  The USB-TTL cable will interference the module signal, but not effect at output.
 */
 
 #include <AD9833.h>         //Include AD9833 library from BillWilliams1952 @https://github.com/Billwilliams1952/AD9833-Library-Arduino
@@ -30,10 +37,10 @@ RotaryEncoder encoder(2, 3);// Rotary encoder connect pin. I converte the pins i
 AD9833 gen(FNC_PIN, 24000000);       //Declare gen object as first AD9833 module
 AD9833 gen2(FNC_PIN2, 24000000);     //Declare gen2 object as second AD9833 module
 
-uint32_t ch1Freq = 1000;
+float ch1Freq = 1000.0;
 float ch1Phase = 0;
 
-uint32_t ch2Freq = 1000;
+float ch2Freq = 1000.0;
 float ch2Phase = 0;
 bool ad9833Update = false;
 
@@ -62,7 +69,9 @@ bool back = false;
 bool resetFlag = false;
 bool setFreq = false;
 bool setPhase = false;
-uint32_t newFreq = 0.0;
+float newFreq = 0.0;
+byte ch1Waveform = 0;   //0 = sine, 1 = triangle, 2 = square
+byte ch2Waveform = 0;
 
 menuPage1 mainMenu;
 menuPage2 channel;
@@ -94,6 +103,7 @@ void lcdShowMenu();
 void ad9833Run();    //Update the AD9833 module for new configuration
 void outputChecker();   //Check the output switch
 void resetMenuItem();
+unsigned long power();  //instead using pow()function because there is an error instead accurate value
 
 //------------------------ ISR --------------------------------
 
@@ -175,16 +185,19 @@ void ad9833Run() {
         if (layer3Item == 0) {
           //CH1 sinewave
           gen.SetWaveform(REG0, SINE_WAVE);
+          ch1Waveform = 0;
           resetFlag = true;
         }
         else if (layer3Item == 1) {
           //CH1 triangle wave
           gen.SetWaveform(REG0, TRIANGLE_WAVE);
+          ch1Waveform = 1;
           resetFlag = true;
         }
         else {
           //CH1 square wave
           gen.SetWaveform(REG0, SQUARE_WAVE);
+          ch1Waveform = 2;
           resetFlag = true;
         }
       }
@@ -208,16 +221,19 @@ void ad9833Run() {
         if (layer3Item == 0) {
           //CH2 sinewave
           gen2.SetWaveform(REG0, SINE_WAVE);
+          ch2Waveform = 0;
           resetFlag = true;
         }
         else if (layer3Item == 1) {
           //CH2 triangle wave
           gen2.SetWaveform(REG0, TRIANGLE_WAVE);
+          ch2Waveform = 1;
           resetFlag = true;
         }
         else {
           //CH2 square wave
           gen2.SetWaveform(REG0, SQUARE_WAVE);
+          ch2Waveform = 2;
           resetFlag = true;
         }
       }
@@ -239,16 +255,16 @@ void ad9833Run() {
 
 void lcdShowMenu() {
   if (buttonCtr == 0) //Channel select
-    mainMenu.show(lcdNeedUpdate, rotaryCtr, layer1Temp);
+    mainMenu.show(lcdNeedUpdate, rotaryCtr, layer1Temp, ch1Freq, ch2Freq, ch1Waveform, ch2Waveform);
   else if (buttonCtr == 1)  //Setting select
-    channel.show(lcdNeedUpdate, rotaryCtr, layer2Temp, back);
+    channel.show(lcdNeedUpdate, rotaryCtr, layer2Temp, back, layer1Item);
   else if (buttonCtr == 2)  //channel waveform setting
     switch (layer2Item) {
       case (0):   //Waveform select
-        waveform.show(lcdNeedUpdate, rotaryCtr, layer3Temp, back);
+        waveform.show(lcdNeedUpdate, rotaryCtr, layer3Temp, back, layer1Item);
         break;
       case (1):   //Frequency setting
-        frequency.show(lcdNeedUpdate, rotaryCtr, layer3Temp, back, layer1Item, ch1Freq, ch2Freq, setFreq);
+        frequency.show(lcdNeedUpdate, rotaryCtr, layer3Temp, back, layer1Item, ch1Freq, ch2Freq, setFreq, layer1Item);
         break;
       case (2):   //Phase setting
         phase.show(lcdNeedUpdate, rotaryCtr, layer3Temp, back);
@@ -259,7 +275,7 @@ void lcdShowMenu() {
       Serial.println("frequency hertz");
       lcdSetFrequency();
 
-      if (buttonCtr > 10) { //reset buttonCtr when done freq setting
+      if (buttonCtr > 11) { //reset buttonCtr when done freq setting
         buttonCtr = 0;
         ad9833Update = true;
       }
@@ -305,6 +321,7 @@ void buttonChecker() {
 }
 
 
+
 void lcdSetFrequency() {
   float oldFreq = 0.0;
   byte xPos = 9;
@@ -318,8 +335,8 @@ void lcdSetFrequency() {
       oldFreq = ch1Freq;
     else if (layer1Item == 1)
       oldFreq = ch2Freq;
-    RSCG12864B.print_string_5x7_xy(9, 10, "       "); 	//clear oldFreq screen
-    RSCG12864B.print_string_5x7_xy(110, 10, "Hz");
+    RSCG12864B.print_string_5x7_xy(9, 10, "00000000"); 	//clear oldFreq screen
+    RSCG12864B.print_string_5x7_xy(60, 10, "Hz");
     setFreq = true;
     lcdNeedUpdate = false;
   }
@@ -329,32 +346,37 @@ void lcdSetFrequency() {
   else if (rotaryCtr < 0)
     rotaryCtr = 9;
 
-  if ((buttonCtr < 10) && setFreq) {
+  if ((buttonCtr < 11) && setFreq) {
     xPos = xPos + ((buttonCtr - 3) * 6);
     RSCG12864B.cursor(xPos, 10);
     RSCG12864B.print_U32_5x7(rotaryCtr);
     if (buttonCtr != oldButtonCtr) { //When buttonCtr change, update newFreq once
       oldButtonCtr = buttonCtr;  //Update oldButtonCtr
-      newFreq = newFreq + rotaryCtr * pow(10, (10 - buttonCtr));
+      newFreq = newFreq + rotaryCtr * power(10, (11 - buttonCtr));
       Serial.print("New Frequemcy:");
       Serial.println(newFreq);
     }
   }
-  if (buttonCtr == 10) {
+  if (buttonCtr == 11) {
     if (lcdNeedUpdate) {
       RSCG12864B.clear();
       lcdNeedUpdate = false;
+      newFreq = newFreq + rotaryCtr * power(10, (11 - buttonCtr));
       RSCG12864B.draw_rectangle(0, 0, 127, 63);    //Draw outline rectangle
-      RSCG12864B.print_string_5x7_xy(9, 2, "Set freq to");
+      if (layer1Item == 0)
+        RSCG12864B.print_string_5x7_xy(9, 2, "Set CH1 freq to");
+      else if (layer1Item == 1)
+        RSCG12864B.print_string_5x7_xy(9, 2, "Set CH2 freq to");
       RSCG12864B.print_U32_5x7_xy(9, 10, newFreq);  //clear oldFreq screen
       RSCG12864B.print_string_5x7_xy(60, 10, "Hz");
     }
   }
-  if (buttonCtr > 10) {
+  if (buttonCtr > 11) {
     if (layer1Item == 0)
       ch1Freq = newFreq;
     else if (layer1Item == 1)
       ch2Freq = newFreq;
+    oldButtonCtr = 0;
     newFreq = 0;
     ad9833Update = true;
     resetFlag = true;
@@ -388,11 +410,24 @@ void outputChecker() {
   if (!digitalRead(Enable)) {
     gen.EnableOutput(true);   // Turn ON the output
     gen2.EnableOutput(true);
-    RSCG12864B.draw_fill_circle(105, 5, 2);
+    RSCG12864B.draw_fill_circle(122, 5, 2);
   }
   else {
     gen.EnableOutput(false);   // Turn OFF the output
     gen2.EnableOutput(false);
-    RSCG12864B.delete_fill_circle(105, 5, 2);
+    RSCG12864B.delete_fill_circle(122, 5, 2);
   }
+}
+
+unsigned long power(int base, int exponent) {
+  unsigned long result;
+  if (exponent == 0) {
+    result = 1;
+  } else {
+    result = base;
+    for (int i = 0; i < (exponent - 1); i++) {
+      result *= base;
+    }
+  }
+  return result;
 }

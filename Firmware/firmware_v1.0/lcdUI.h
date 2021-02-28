@@ -33,19 +33,49 @@
 
 class menuPage1 {
   public:
-    void show(bool &updateLcd, int &rotary, byte &temp);
+    void show(bool &updateLcd, int &rotary, byte &temp, float &freq1, float &freq2, byte &ch1Waveform, byte &ch2Waveform);
   private:
 };
 
-void menuPage1::show(bool &updateLcd, int &rotary, byte &temp) {
+void menuPage1::show(bool &updateLcd, int &rotary, byte &temp, float &freq1, float &freq2, byte &ch1Waveform, byte &ch2Waveform) {
 
   if (updateLcd) {
     RSCG12864B.clear();
     rotary = 0;
     RSCG12864B.draw_rectangle(0, 0, 127, 63);    //Draw outline rectangle
-    RSCG12864B.print_string_5x7_xy(9, 2, "Select Channel");
-    RSCG12864B.print_string_5x7_xy(9, 10, "Channel 1");
-    RSCG12864B.print_string_5x7_xy(9, 18, "Channel 2");
+    RSCG12864B.draw_line(0, 30, 127, 30);
+    RSCG12864B.print_string_5x7_xy(9, 2, "Channel Status");
+    RSCG12864B.print_string_5x7_xy(9, 12, "CH1");
+    RSCG12864B.print_U32_5x7_xy(60, 12, freq1);
+    RSCG12864B.print_string_5x7_xy(110, 12, "Hz");
+    RSCG12864B.print_string_5x7_xy(9, 20, "CH2");
+    RSCG12864B.print_U32_5x7_xy(60, 20, freq2);
+    RSCG12864B.print_string_5x7_xy(110, 20, "Hz");
+    switch (ch1Waveform) {
+      case 0:
+        RSCG12864B.print_string_5x7_xy(30, 12, "Sine");
+        break;
+      case 1:
+        RSCG12864B.print_string_5x7_xy(30, 12, "Trig");
+        break;
+      case 2:
+        RSCG12864B.print_string_5x7_xy(30, 12, "Squr");
+        break;
+    }
+    switch (ch2Waveform) {
+      case 0:
+        RSCG12864B.print_string_5x7_xy(30, 20, "Sine");
+        break;
+      case 1:
+        RSCG12864B.print_string_5x7_xy(30, 20, "Trig");
+        break;
+      case 2:
+        RSCG12864B.print_string_5x7_xy(30, 20, "Squr");
+        break;
+    }
+    RSCG12864B.print_string_5x7_xy(9, 32, "Select Channel");
+    RSCG12864B.print_string_5x7_xy(9, 42, "Channel 1");
+    RSCG12864B.print_string_5x7_xy(9, 50, "Channel 2");
     updateLcd = false;
   }
 
@@ -56,14 +86,14 @@ void menuPage1::show(bool &updateLcd, int &rotary, byte &temp) {
 
   switch (rotary) {
     case (0):   //Select channel 1
-      RSCG12864B.print_string_5x7_xy(3, 10, ">");
-      RSCG12864B.print_string_5x7_xy(3, 18, " ");
+      RSCG12864B.print_string_5x7_xy(3, 42, ">");
+      RSCG12864B.print_string_5x7_xy(3, 50, " ");
       temp = 0;
 
       break;
     case (1):   //Select channel 2
-      RSCG12864B.print_string_5x7_xy(3, 10, " ");
-      RSCG12864B.print_string_5x7_xy(3, 18, ">");
+      RSCG12864B.print_string_5x7_xy(3, 42, " ");
+      RSCG12864B.print_string_5x7_xy(3, 50, ">");
       temp = 1;
       break;
   }
@@ -73,16 +103,19 @@ void menuPage1::show(bool &updateLcd, int &rotary, byte &temp) {
 
 class menuPage2 {
   public:
-    void show(bool &updateLcd, int &rotary, byte &temp, bool &back);
+    void show(bool &updateLcd, int &rotary, byte &temp, bool &back, byte &layer1Item);
   private:
 };
 
-void menuPage2::show(bool &updateLcd, int &rotary, byte &temp, bool &back) {
+void menuPage2::show(bool &updateLcd, int &rotary, byte &temp, bool &back, byte &layer1Item) {
   if (updateLcd) {
     RSCG12864B.clear();
     rotary = 0;
     RSCG12864B.draw_rectangle(0, 0, 127, 63);    //Draw outline rectangle
-    RSCG12864B.print_string_5x7_xy(9, 2, "Settings");
+    if (layer1Item == 0)
+      RSCG12864B.print_string_5x7_xy(9, 2, "CH1 Settings");
+    else if (layer1Item == 1)
+      RSCG12864B.print_string_5x7_xy(9, 2, "CH2 Settings");
     RSCG12864B.print_string_5x7_xy(9, 10, "Waveform Type");
     RSCG12864B.print_string_5x7_xy(9, 18, "Frequency");
     RSCG12864B.print_string_5x7_xy(9, 26, "Phase");
@@ -127,17 +160,21 @@ void menuPage2::show(bool &updateLcd, int &rotary, byte &temp, bool &back) {
 
 class menuPage3 {
   public:
-    void show(bool &updateLcd, int &rotary, byte &temp, bool &back);
+    void show(bool &updateLcd, int &rotary, byte &temp, bool &back, byte &layer1Item);
   private:
 };
 
-void menuPage3::show(bool &updateLcd, int &rotary, byte &temp, bool &back) {
+void menuPage3::show(bool &updateLcd, int &rotary, byte &temp, bool &back, byte &layer1Item) {
 
   if (updateLcd) {
     RSCG12864B.clear();
     rotary = 0;
     RSCG12864B.draw_rectangle(0, 0, 127, 63);    //Draw outline rectangle
-    RSCG12864B.print_string_5x7_xy(9, 2, "Waveform Type:");
+    if (layer1Item == 0)
+      RSCG12864B.print_string_5x7_xy(9, 2, "CH1");
+    else if (layer1Item == 1)
+      RSCG12864B.print_string_5x7_xy(9, 2, "CH2");
+    RSCG12864B.print_string_5x7_xy(29, 2, "Waveform");
     RSCG12864B.print_string_5x7_xy(9, 10, "Sine wave");
     RSCG12864B.print_string_5x7_xy(9, 18, "Triangle wave");
     RSCG12864B.print_string_5x7_xy(9, 26, "Square wave");
@@ -182,17 +219,20 @@ void menuPage3::show(bool &updateLcd, int &rotary, byte &temp, bool &back) {
 
 class menuPage4 {
   public:
-    void show(bool &updateLcd, int &rotary, byte &temp, bool &back, byte &channel, uint32_t &freq1, uint32_t &freq2, bool &setFreq);
+    void show(bool &updateLcd, int &rotary, byte &temp, bool &back, byte &channel, float &freq1, float &freq2, bool &setFreq, byte &layer1Item);
   private:
 };
 
-void menuPage4::show(bool &updateLcd, int &rotary, byte &temp, bool &back, byte &channel, uint32_t &freq1, uint32_t &freq2, bool &setFreq) {
+void menuPage4::show(bool &updateLcd, int &rotary, byte &temp, bool &back, byte &channel, float &freq1, float &freq2, bool &setFreq, byte &layer1Item) {
 
   if (updateLcd) {
     RSCG12864B.clear();
     rotary = 0;
     RSCG12864B.draw_rectangle(0, 0, 127, 63);    //Draw outline rectangle
-    RSCG12864B.print_string_5x7_xy(9, 2, "Set frequency");
+    if (layer1Item == 0)
+      RSCG12864B.print_string_5x7_xy(9, 2, "Set CH1 frequency");
+    else if (layer1Item == 1)
+      RSCG12864B.print_string_5x7_xy(9, 2, "Set CH2 frequency");
     RSCG12864B.print_string_5x7_xy(60, 10, "Hz");
     if (channel == 0)
       RSCG12864B.print_U32_5x7_xy(9, 10, freq1);

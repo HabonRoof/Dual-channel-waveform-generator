@@ -21,9 +21,9 @@
 正弦波  
 ![6kHz 正弦波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969322.jpg)
 方波
-![1kHz 方波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969314.jpg)
+![1kHz 方波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969316.jpg)
 三角波
-![1kHz 三角波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969314.jpg)
+![1kHz 三角波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969315.jpg)
 主選單畫面
 ![通道輸出狀態以及主選單](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969321.jpg)
 通道1 設定選擇畫面

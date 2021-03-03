@@ -31,7 +31,7 @@
 波型選擇畫面
 ![CH1波型選擇](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969317.jpg)
 頻率設定畫面
-![Ch1頻率設定(https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969319.jpg)
+![Ch1頻率設定](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969319.jpg)
 頻率設定畫面-2
 ![Ch1頻率設定畫面-2](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969320.jpg)
 

@@ -11,12 +11,30 @@
 
 ## 波型展示
 最大電壓輸出  
+
 最小電壓輸出  
+
 最高頻率輸出  
+![12.5 MHz 輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969313.jpg)
 最低頻率輸出  
+
 正弦波  
-方波  
-三角波  
+![6kHz 正弦波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969322.jpg)
+方波
+![1kHz 方波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969314.jpg)
+三角波
+![1kHz 三角波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969314.jpg)
+主選單畫面
+![通道輸出狀態以及主選單](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969321.jpg)
+通道1 設定選擇畫面
+![Ch1 設定](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969318.jpg)
+波型選擇畫面
+![CH1波型選擇](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969317.jpg)
+頻率設定畫面
+![Ch1頻率設定(https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969319.jpg)
+頻率設定畫面-2
+![Ch1頻率設定畫面-2](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969320.jpg)
+
 
 ##材料表
 AD9833 DDS Module x2   

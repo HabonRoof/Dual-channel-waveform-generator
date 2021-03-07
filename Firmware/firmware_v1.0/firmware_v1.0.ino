@@ -350,6 +350,8 @@ void lcdSetFrequency() {
     xPos = xPos + ((buttonCtr - 3) * 6);
     RSCG12864B.cursor(xPos, 10);
     RSCG12864B.print_U32_5x7(rotaryCtr);
+    RSCG12864B.delete_line(xPos-6,17,xPos,17);
+    RSCG12864B.draw_line(xPos,17,xPos+4,17);
     if (buttonCtr != oldButtonCtr) { //When buttonCtr change, update newFreq once
       oldButtonCtr = buttonCtr;  //Update oldButtonCtr
       newFreq = newFreq + rotaryCtr * power(10, (11 - buttonCtr));

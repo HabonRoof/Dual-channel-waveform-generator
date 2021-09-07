@@ -4,35 +4,37 @@
 
 本專案使用AD9833直接數位信號合成器(Direct Digital Synthesizer)，利用數位方式產生任意波型與頻率。  
 控制端使用與Arduino UNO相同之Atmega328P微處理器，顯示器使用128*64藍底白字LCD顯示器。  
+This projec use AD9833 direct digital synthesizer to generate any waveform with any frequency.
+Atmega328P as main controller, and the white blue LCD display shows the user interface.
 使用方法:
 首先透過LCD螢幕設定各通道之波型、頻率、相位等等參數，透過微處理器設定參數，再由AD9833產生對應之波型訊號。  
 此訊號會再透過LM318 高轉動率(Slew Rate)運算放大器將電壓放大至+12V~-12V之振幅。  
 此外，板載之+12、-12、5V電源使用線性穩壓器做為電源供應，提供乾淨無雜訊之直流電源，以避免市電雜訊干擾波型輸出。  
+How to use:
+Use the rotary encode to setup th ewaveform parameter, such as waveform type, frequency and phase, which progress to main uC, and generate the corresponding sugnal.
+The signal will megnified by LM318 high slew-rate amplifier to +12V~-12V range.
+Morevoer, the project use low dropout linear regulater to provide clar, noise-less power source.
 
 ## 波型展示
-最大電壓輸出  
-
-最小電壓輸出  
-
-最高頻率輸出  
+最高頻率輸出/Maximum frequency output  
 ![12.5 MHz 輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969313.jpg)
 最低頻率輸出  
 
-正弦波  
+正弦波/Sinusoidal wave  
 ![6kHz 正弦波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969322.jpg)
 方波
 ![1kHz 方波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969316.jpg)
-三角波
+三角波/Truangular wave
 ![1kHz 三角波輸出](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969315.jpg)
-主選單畫面
+主選單畫面/Main menu
 ![通道輸出狀態以及主選單](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969321.jpg)
-通道1 設定選擇畫面
+通道1 設定選擇畫面/Channel1 setting
 ![Ch1 設定](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969318.jpg)
-波型選擇畫面
+波型選擇畫面/Waveform types
 ![CH1波型選擇](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969317.jpg)
-頻率設定畫面
+頻率設定畫面/Frequency setting
 ![Ch1頻率設定](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969319.jpg)
-頻率設定畫面-2
+頻率設定畫面-2/Frequency Setting
 ![Ch1頻率設定畫面-2](https://github.com/HabonRoof/Dual-channel-waveform-generator/blob/master/Image/969320.jpg)
 
 
